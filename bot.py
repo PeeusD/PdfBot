@@ -5,24 +5,19 @@ from dotenv import load_dotenv
 import PyPDF2 as pd
 import re
 
-
 load_dotenv()
 
 TOKEN = getenv('TOKEN')
-
 bot = Bot(token=TOKEN)
 
-
-
 def start(update, context):
-    
-    
+       
     update.message.reply_text(f'Send Me ur PDF :  ')
 
 def pdf_mgmt (update, context) :
         
     try:   
-        update.message.reply_text("Processing...")
+        update.message.reply_text("***Processing***")
         file_id = update.message.document.file_id  #getting file id
         fileName = update.message.document.file_name   #getting filename
         newFile = bot.get_file(file_id)
@@ -84,9 +79,7 @@ def pdf_mgmt (update, context) :
     
 
 updater = Updater(TOKEN)
-
 updater.dispatcher.add_handler(CommandHandler('start', start))
-
 updater.dispatcher.add_handler(MessageHandler(Filters.chat_type.private, pdf_mgmt))
 updater.start_polling()
 updater.idle()
