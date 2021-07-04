@@ -30,10 +30,10 @@ def pdf_mgmt (update, context) :
         for root, dirs, files in walk(dir_path):
             for file in files: 
         
-                if file.endswith('.pdf'):
-                    
+                if file.endswith('.pdf'): 
                     rename(file, fileName)
         
+
         infile = pd.PdfFileReader(fileName, 'rb')
         numPages = infile.getNumPages()
         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
