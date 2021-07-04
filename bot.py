@@ -82,7 +82,7 @@ def pdf_mgmt (update, context) :
             update.message.reply_text(f"Word: '{pattern}' not found in PDF!")
         remove(fileName)    
     except Exception as e:
-        update.message.reply_text(e)
+       print(e)
           
     
 
