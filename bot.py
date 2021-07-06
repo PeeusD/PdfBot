@@ -7,7 +7,9 @@ import re
 from time import sleep
 load_dotenv()
 
+CHANNEL_ID = getenv('CHANNEL_ID')
 TOKEN = getenv('TOKEN')
+
 bot = Bot(token=TOKEN)
 
 def start(update, context):
@@ -75,12 +77,16 @@ def pdf_mgmt (update, context) :
             update.message.reply_text(f'{delPages} Pages have been deleted!')
             #uploading...
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
-            context.bot.send_document(chat_id=update.effective_message.chat_id, document=open(fileName, 'rb'), timeout=240)
+            context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
 
         else:
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
             update.message.reply_text(f"Word: '{pattern}' not found in PDF!")
-        remove(fileName)    
+            context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
+            context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
+        
+        remove(fileName)   
+         
     except Exception as e:
        print(e)
           
