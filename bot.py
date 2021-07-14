@@ -43,8 +43,8 @@ def pdf_mgmt (update, context) :
 
         # merging promo pdfs to  regular pdfs
         merger = pd.PdfFileMerger()
-        merger.append(pd.PdfFileReader('promo.pdf', strict = False))
-        merger.append(pd.PdfFileReader(fileName, strict = False))
+        merger.append(pd.PdfFileReader('promo.pdf', 'rb'))
+        merger.append(pd.PdfFileReader(fileName, 'rb'))
         merger.write(fileName)
         merger.close()
 
