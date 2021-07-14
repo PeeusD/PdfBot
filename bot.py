@@ -23,6 +23,7 @@ def pdf_mgmt (update, context) :
         message = update.message.reply_text("***Processing...and...Searching***")
         
         file_id = update.message.document.file_id  #getting file id
+        
         fileName = update.message.document.file_name   #getting filename
         newFile = bot.get_file(file_id)
         newFile.download()
@@ -32,14 +33,22 @@ def pdf_mgmt (update, context) :
         pattern = 'DAILY NEWSPAPERS PDF'
        
         dir_path = path.dirname(path.realpath(__file__))
-  
+        
+        #renaming pdfs
         for root, dirs, files in walk(dir_path):
             for file in files: 
         
-                if file.endswith('.pdf'): 
+                if file.startswith('file'): 
                     rename(file, fileName)
-        
 
+        # merging promo pdfs to  regular pdfs
+        merger = pd.PdfFileMerger()
+        merger.append(pd.PdfFileReader('promo.pdf', strict = False))
+        merger.append(pd.PdfFileReader(fileName, strict = False))
+        merger.write(fileName)
+        merger.close()
+
+        #getting no. of pages for pdfs
         infile = pd.PdfFileReader(fileName, 'rb')
         numPages = infile.getNumPages()
         
@@ -55,13 +64,16 @@ def pdf_mgmt (update, context) :
                 # print(f'Pattern found on Page no: {i}')
                 delPages.append(i)
 
+
         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
-        
+        #searching required text in pdfs...
         message_id = message.message_id
         sleep(3)
         bot.delete_message(chat_id=update.effective_message.chat_id, message_id= message_id)
         update.message.reply_text(f'Pattern found in Page nos.: {delPages}')
-
+        
+        
+        #deleting required pages and uploading to telegram...
         if len(delPages) > 0 :
             infile = pd.PdfFileReader(fileName, 'rb')
             output = pd.PdfFileWriter()
@@ -73,24 +85,25 @@ def pdf_mgmt (update, context) :
 
             with open(fileName, 'wb') as f:
                 output.write(f)
+            
           
             update.message.reply_text(f'{delPages} Pages have been deleted!')
             #uploading...
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
+            #For debugging use update eff....
             context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
 
         else:
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
             update.message.reply_text(f"Word: '{pattern}' not found in PDF!")
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
+            #For debugging use update eff...
             context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
         
-        remove(fileName)   
+        remove(fileName)   #delting pdf from directory
          
     except Exception as e:
        print(e)
-          
-    
 
 updater = Updater(TOKEN)
 updater.dispatcher.add_handler(CommandHandler('start', start))
