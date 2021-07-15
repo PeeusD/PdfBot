@@ -32,23 +32,23 @@ def pdf_mgmt (update, context) :
 
         pattern = 'DAILY NEWSPAPERS PDF'
        
-        dir_path = path.dirname(path.realpath(__file__))
+        dir_path = path.dirname(path.abspath(__file__))
         
         #renaming pdfs
         for root, dirs, files in walk(dir_path):
             for file in files: 
                 
                 if file.startswith('file'):
-                    print(file) 
+                    
                     rename(file, fileName)
 
                     merger = pd.PdfFileMerger()
                     merger.append(pd.PdfFileReader(open('promo.pdf', 'rb')))
                     merger.append(pd.PdfFileReader(open(fileName, 'rb')))
+                   
                     merger.write(fileName)
                     merger.close()
-                else:
-                    print("no pdf found")    
+                   
 
 
         # merging promo pdfs to  regular pdfs
