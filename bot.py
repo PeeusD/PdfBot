@@ -38,7 +38,7 @@ def pdf_mgmt (update, context) :
         for root, dirs, files in walk(dir_path):
             for file in files: 
                 
-                if file.endswith('file'):
+                if file.endswith('.pdf'):
                     print(file) 
                     rename(file, fileName)
 
