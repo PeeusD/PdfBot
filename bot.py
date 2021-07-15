@@ -38,17 +38,17 @@ def pdf_mgmt (update, context) :
         for root, dirs, files in walk(dir_path):
             for file in files: 
                 
-                if file.startswith('file'):
+                if file.endswith('file'):
                     print(file) 
                     rename(file, fileName)
 
 
         # merging promo pdfs to  regular pdfs
-        merger = pd.PdfFileMerger()
-        merger.append(pd.PdfFileReader(open('promo.pdf', 'rb')))
-        merger.append(pd.PdfFileReader(open(fileName, 'rb')))
-        merger.write(fileName)
-        merger.close()
+        # merger = pd.PdfFileMerger()
+        # merger.append(pd.PdfFileReader(open('promo.pdf', 'rb')))
+        # merger.append(pd.PdfFileReader(open(fileName, 'rb')))
+        # merger.write(fileName)
+        # merger.close()
 
         #getting no. of pages for pdfs
         infile = pd.PdfFileReader(fileName, 'rb')
@@ -93,14 +93,14 @@ def pdf_mgmt (update, context) :
             #uploading...
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
             #For debugging use update eff....
-            context.bot.send_document(chat_id=update.effective_message.chat_id, document=open(fileName, 'rb'), timeout=240)
+            context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
 
         else:
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
             update.message.reply_text(f"Word: '{pattern}' not found in PDF!")
             context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
             #For debugging use update eff...
-            context.bot.send_document(chat_id=update.effective_message.chat_id, document=open(fileName, 'rb'), timeout=240)
+            context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
         
         remove(fileName)   #delting pdf from directory
          
