@@ -59,7 +59,7 @@ def pdf_mgmt (update, context) :
         
 
         #getting no. of pages for pdfs
-        infile = pd.PdfFileReader(fileName, 'rb')
+        infile = pd.PdfFileReader(path.join(root,fileName))
         numPages = infile.getNumPages()
         
         
@@ -68,10 +68,11 @@ def pdf_mgmt (update, context) :
         for i in range(0, numPages):
             pageObj = infile.getPage(i)
             ex_text = pageObj.extractText()
-            
+
+            print('ok numpg')
             if re.search(pattern, ex_text):
                 
-                # print(f'Pattern found on Page no: {i}')
+                print(f'Pattern found on Page no: {i}')
                 delPages.append(i)
 
 
@@ -85,9 +86,9 @@ def pdf_mgmt (update, context) :
         
         #deleting required pages and uploading to telegram...
         if len(delPages) > 0 :
-            infile = pd.PdfFileReader(fileName, 'rb')
+            infile = pd.PdfFileReader(path.join(root,fileName))
             output = pd.PdfFileWriter()
-
+            
             for i in range(infile.getNumPages()):
                 if i not in delPages:
                     p = infile.getPage(i)
