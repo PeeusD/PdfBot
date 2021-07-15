@@ -39,12 +39,13 @@ def pdf_mgmt (update, context) :
             for file in files: 
                 
                 if file.startswith('file'):
-                  
+                    print(file)
                     rename(file, fileName)
+                    print(fileName)
                     merger = pd.PdfFileMerger()
                     merger.append(pd.PdfFileReader(path.join(root,'promo.pdf')))
                     merger.append(pd.PdfFileReader(path.join(root,fileName)))
-                   
+                    print(ok)
                     merger.write(fileName)
                     merger.close()
                    
