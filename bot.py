@@ -104,7 +104,7 @@ def pdf_mgmt (update, context) :
                         #For debugging use update eff...
                         context.bot.send_document(chat_id=update.effective_message.chat_id, document=open(fileName, 'rb'), timeout=240)
                     
-                    remove(fileName)   #delting pdf from directory
+                    remove(path.join(root,fileName))  #delting pdf from directory
                     
     except Exception as e:
        print(e)
