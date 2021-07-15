@@ -46,8 +46,10 @@ def pdf_mgmt (update, context) :
                     merger.append(pd.PdfFileReader(open('promo.pdf', 'rb')))
                     merger.append(pd.PdfFileReader(open(fileName, 'rb')))
                    
-                    merger.write(fileName)
-                    merger.close()
+                    # merger.write(fileName)
+                    # merger.close()
+                    with open(fileName, 'wb') as fi:
+                        merger.write(fi)
                    
 
 
