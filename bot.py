@@ -95,16 +95,17 @@ def pdf_mgmt (update, context) :
                         #uploading...
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff....
-                        context.bot.send_document(chat_id=update.effective_message.chat_id, document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
 
                     else:
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
                         update.message.reply_text(f"Word: '{pattern}' not found in PDF!")
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff...
-                        context.bot.send_document(chat_id=update.effective_message.chat_id, document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
                     
                     remove(path.join(root,fileName))  #delting pdf from directory
+                    print('File deleted!')
                     
     except Exception as e:
        print(e)
