@@ -87,7 +87,7 @@ def pdf_mgmt (update, context) :
                                 p = infile.getPage(i)
                                 output.addPage(p)
 
-                        with open(path.join(root,fileName)) as f:
+                        with open(path.join(root,fileName),'wb') as f:
                             output.write(f)
                         
                     
