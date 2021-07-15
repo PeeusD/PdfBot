@@ -39,16 +39,16 @@ def pdf_mgmt (update, context) :
             for file in files: 
                 
                 if file.startswith('file'):
-                    print(file)
+                    
                     rename(file, fileName)
-                    print(fileName)
+                   
                     merger = pd.PdfFileMerger()
                     merger.append(pd.PdfFileReader(path.join(root,'promo.pdf')))
                     merger.append(pd.PdfFileReader(path.join(root,fileName)))
-                    print('ok')
+                    
                     merger.write(fileName)
                     merger.close()
-                    print('ok closing')
+                   
 
 
         #getting no. of pages for pdfs
@@ -62,10 +62,10 @@ def pdf_mgmt (update, context) :
                         pageObj = infile.getPage(i)
                         ex_text = pageObj.extractText()
 
-                        print('ok numpg getting')
+                        
                         if re.search(pattern, ex_text):
                             
-                            print(f'Pattern found on Page no: {i}')
+                            # print(f'Pattern found on Page no: {i}')
                             delPages.append(i)
 
 
@@ -81,13 +81,13 @@ def pdf_mgmt (update, context) :
                     if len(delPages) > 0 :
                         infile = pd.PdfFileReader(path.join(root,fileName))
                         output = pd.PdfFileWriter()
-                        print('pg deltd')
+                        
                         for i in range(infile.getNumPages()):
                             if i not in delPages:
                                 p = infile.getPage(i)
                                 output.addPage(p)
 
-                        with open(fileName, 'wb') as f:
+                        with open(path.join(root,fileName)) as f:
                             output.write(f)
                         
                     
