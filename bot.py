@@ -1,10 +1,12 @@
-from telegram import ChatAction, Bot
+from telegram import ChatAction, Bot, ParseMode
 from os import getenv, rename, remove, path, walk
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from dotenv import load_dotenv
 import PyPDF2 as pd
 import re
 from time import sleep
+import requests
+from datetime import datetime
 load_dotenv()
 
 CHANNEL_ID = getenv('CHANNEL_ID')
@@ -14,7 +16,25 @@ bot = Bot(token=TOKEN)
 
 def start(update, context):
        
-    update.message.reply_text(f'Send Me ur PDF :  ')
+    update.message.reply_text(f'Send Me ur PDF :')
+
+
+def greetings(update, context=bot):
+        
+        dat = datetime.today().strftime('%d %B %Y')
+
+
+        url = "https://api.quotable.io/random"
+
+        response =  requests.get(url)
+        json_data = response.json()
+      
+        msg = f"🌞 *Good Morning!*  \n📅_{dat} \n📝{json_data['content']} \n- {json_data['author']}_"
+        bot.send_message(chat_id=CHANNEL_ID, text=msg, parse_mode= ParseMode.MARKDOWN)
+
+
+
+
 
 def pdf_mgmt (update, context) :
         
@@ -112,6 +132,8 @@ def pdf_mgmt (update, context) :
 
 updater = Updater(TOKEN)
 updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(CommandHandler('greet', greetings))
+
 updater.dispatcher.add_handler(MessageHandler(Filters.chat_type.private, pdf_mgmt))
 updater.start_polling()
 updater.idle()

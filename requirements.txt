@@ -2,3 +2,4 @@ python-telegram-bot
 python-dotenv
 PyPDF2
 regex
+requests
