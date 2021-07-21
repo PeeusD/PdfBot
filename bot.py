@@ -6,49 +6,65 @@ import PyPDF2 as pd
 import re
 from time import sleep
 import requests
+from functools import wraps
 from datetime import datetime
 load_dotenv()
 
-CHANNEL_ID = getenv('CHANNEL_ID')
+CHAT_ID = getenv('CHAT_ID')
 TOKEN = getenv('TOKEN')
+USER1 = int(getenv('USER1'))
+USER2 = int(getenv('USER2'))
+USER3 = int(getenv('USER3'))
 
 bot = Bot(token=TOKEN)
 
+
+LIST_OF_ADMINS = [USER1, USER2, USER3]
+
+def restricted(func):
+    @wraps(func)
+    def wrapped(update, context):
+        user_id = update.effective_user.id
+      
+        if user_id not in LIST_OF_ADMINS:
+            print(f"Person with userId: {user_id} has Unauthorized accessed bot!")
+            return
+        return func(update, context)
+    return wrapped
+
+
+@restricted
 def start(update, context):
-       
-    update.message.reply_text(f'Send Me ur PDF :')
+       update.message.reply_text(f'Send Me ur PDF :')
 
-
+@restricted
 def greetings(update, context=bot):
-        
+        #printing date 
         dat = datetime.today().strftime('%d %B %Y')
-
-
+            #daily quotes api
         url = "https://api.quotable.io/random"
 
         response =  requests.get(url)
         json_data = response.json()
-      
-        msg = f"🌞 *Good Morning!*  \n📅_{dat} \n📝{json_data['content']} \n- {json_data['author']}_"
-        bot.send_message(chat_id=CHANNEL_ID, text=msg, parse_mode= ParseMode.MARKDOWN)
+        #sending message to channel...
+        msg = f"🌞 *Good Morning! 🌞*  \n_{dat} \n{json_data['content']} \n- {json_data['author']}_"
+        bot.send_message(chat_id=CHAT_ID, text=msg, parse_mode= ParseMode.MARKDOWN)
 
 
 
 
-
+@restricted
 def pdf_mgmt (update, context) :
         
     try:   
         
-        message = update.message.reply_text("***Processing...and...Searching***")
+        message = update.message.reply_text("--Processing...and...Searching--")
         
         file_id = update.message.document.file_id  #getting file id
-        
         fileName = update.message.document.file_name   #getting filename
         newFile = bot.get_file(file_id)
         newFile.download()
 
-        
 
         pattern = 'DAILY NEWSPAPERS PDF'
        
@@ -115,14 +131,14 @@ def pdf_mgmt (update, context) :
                         #uploading...
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff....
-                        context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHAT_ID, document=open(fileName, 'rb'), timeout=240)
 
                     else:
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
                         update.message.reply_text(f"Word: '{pattern}' not found in PDF!")
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff...
-                        context.bot.send_document(chat_id=CHANNEL_ID, document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHAT_ID, document=open(fileName, 'rb'), timeout=240)
                     
                     remove(path.join(root,fileName))  #delting pdf from directory
                     print('File deleted!')
