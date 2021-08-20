@@ -1,4 +1,4 @@
-from telegram import ChatAction, Bot, ParseMode
+﻿from telegram import ChatAction, Bot, ParseMode
 from os import getenv, rename, remove, path, walk
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from dotenv import load_dotenv
@@ -78,7 +78,7 @@ def pdf_mgmt (update, context) :
                     
                     rename(file, fileName)
                    
-                    merger = pd.PdfFileMerger()
+                    merger = pd.PdfFileMerger(strict=True)
                     merger.append(pd.PdfFileReader(path.join(root,'promo.pdf')))
                     merger.append(pd.PdfFileReader(path.join(root,fileName)))
                     
