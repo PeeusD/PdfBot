@@ -144,7 +144,7 @@ def pdf_mgmt (update, context) :
                     # print('File deleted!')
                     
     except Exception as e:
-       print(e)
+       update.message.reply_text(f'Error:- {e}')
 
 updater = Updater(TOKEN)
 updater.dispatcher.add_handler(CommandHandler('start', start))
