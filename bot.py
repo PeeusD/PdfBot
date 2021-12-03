@@ -131,7 +131,7 @@ def pdf_mgmt (update, context) :
                         #uploading...
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff....
-                        context.bot.send_document(chat_id=CHAT_ID, thumb=open('thumbnail.jpg', 'rb'), document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHAT_ID, thumb=open('thumb.jpg', 'rb'), document=open(fileName, 'rb'), timeout=240)
 
                     else:
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
