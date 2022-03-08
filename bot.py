@@ -11,6 +11,7 @@ from datetime import datetime
 load_dotenv()
 
 CHAT_ID = getenv('CHAT_ID')
+CHAT_ID2 = getenv('CHAT_ID2')
 TOKEN = getenv('TOKEN')
 USER1 = int(getenv('USER1'))
 USER2 = int(getenv('USER2'))
@@ -132,6 +133,7 @@ def pdf_mgmt (update, context) :
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff....
                         context.bot.send_document(chat_id=CHAT_ID, thumb=open('thumb.jpg', 'rb'), document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHAT_ID2, thumb=open('thumb.jpg', 'rb'), document=open(fileName, 'rb'), timeout=240)
 
                     else:
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
@@ -139,6 +141,7 @@ def pdf_mgmt (update, context) :
                         context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.UPLOAD_DOCUMENT)
                         #For debugging use update eff...
                         context.bot.send_document(chat_id=CHAT_ID, thumb=open('thumb.jpg', 'rb'), document=open(fileName, 'rb'), timeout=240)
+                        context.bot.send_document(chat_id=CHAT_ID2, thumb=open('thumb.jpg', 'rb'), document=open(fileName, 'rb'), timeout=240)
                     
                     remove(path.join(root,fileName))  #delting pdf from directory
                     # print('File deleted!')
